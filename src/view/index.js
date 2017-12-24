@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 export default class Board extends Component {
     constructor(props) {
         super(props);
@@ -14,6 +14,6 @@ export default class Board extends Component {
         );
     }
     clickMe() {
-        this.setState({name: "stonerao"})
+        this.setState({ name: "stonerao" })
     }
 }
