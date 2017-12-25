@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import Store from '../ajax/index'
-import Swiper from 'swiper';
+import Store from '../ajax/index' 
 import { dishName, banners } from '../ajax/data'
-import searchIcon from '../assets/search.png'
+import searchIcon from '../assets/search.png' 
+import Swiper from 'swiper'
 /* 菜名 */
 const dishNameItme = dishName.list;
 export default class Board extends Component {
@@ -43,6 +43,7 @@ export default class Board extends Component {
                             )
                         })}
                     </div>
+                    <div className="swiper-pagination"></div> 
                 </div>
             </div>
         );
@@ -81,6 +82,8 @@ window.onload = function () {
     });
     new Swiper('.index-banners', {
         loop: true,
+        autoplay:5000,
+        pagination : '.swiper-pagination',
     });
 
 }
