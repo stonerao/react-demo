@@ -1,7 +1,5 @@
-import React, { Component } from 'react'
-import Store from '../ajax/index' 
-import { dishName, banners } from '../ajax/data'
-import searchIcon from '../assets/search.png' 
+import React, { Component } from 'react' 
+import { dishName, banners } from '../ajax/data' 
 import Swiper from 'swiper'
 /* 菜名 */
 const dishNameItme = dishName.list;
@@ -27,7 +25,7 @@ export default class Board extends Component {
                         <div className="swiper-wrapper items-index-names">
                             {dishNameItme.map((item, i) => {
                                 return (
-                                    <div key={i} data-num={i} className={`${i == this.state.dishState ? 'active' : ''} swiper-slide`} onClick={() => this.dishClass(i)}>{item.name}</div>
+                                    <div key={i} data-num={i} className={`${i === this.state.dishState ? 'active' : ''} swiper-slide`} onClick={() => this.dishClass(i)}>{item.name}</div>
                                 )
                             })}
                         </div>
@@ -38,7 +36,7 @@ export default class Board extends Component {
                         {banners.map((item, i) => {
                             return (
                                 <div key={i} data-id={item.id} className="swiper-slide">
-                                    <img src={item.img} />
+                                    <img src={item.img} alt="i"/>
                                 </div>
                             )
                         })}
