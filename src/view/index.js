@@ -15,6 +15,9 @@ export default class Board extends Component {
             dishState: 0,
             searchVal: ""
         }
+        setInterval(()=>{
+            console.log(555)
+        },1000)
     }
     render() {
         return (
@@ -53,7 +56,7 @@ export default class Board extends Component {
                 <div className="while-b mg-t-2 padding-2">
                     <p className="index-title-1">
                         <a>今日菜品</a>
-                        <Link to="/lists/10" className="float-right index-more">更多</Link> 
+                        <a href="/lists/10" className="float-right index-more">更多</a> 
                     </p>
                     <div className="swiper-container recommendList">
                         <div className="swiper-wrapper">

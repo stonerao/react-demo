@@ -3,18 +3,24 @@ import SearchCom from '../component/nav'
 import { todayRecommend } from '../ajax/data'
 import {onScrollBottom} from '../scripts/utils'
 const todayRecommendList = todayRecommend.result.data;
-export default class Board extends Component {
+export default class listComponent extends Component {
     constructor(props) {
         super(props)
         this.state = {
             searchActive: false,
             todayRecommendList:todayRecommendList,
             navTop:false
-        }
-        onScrollBottom(()=>{  
+        } 
+    }
+    componentDidMount(){
+      this.onScrollBottom()
+    }
+    onScrollBottom(){
+        onScrollBottom(()=>{ 
+             console.log(2.3)  
             this.setState({todayRecommendList:[...this.state.todayRecommendList,this.state.todayRecommendList[0]]}) 
-        })
-        window.onscroll = () => {
+        })  
+         window.onscroll = () => { 
             var t = document.documentElement.scrollTop || document.body.scrollTop; //离上方的距离
             const navHeight = document.getElementById('list-nav').scrollHeight 
             if( t > navHeight &&!this.state.navTop){
@@ -34,7 +40,7 @@ export default class Board extends Component {
                         <div className={`${this.state.searchActive ? 'active' : ''} list-nav-btn`} onClick={() => this.srarchClick()}></div>
                     </nav>
                     {/* search input */}
-                    <div style={{'border-bottom':`${this.state.navTop?'1px solid #ededed':''}`}}>
+                    <div style={{'borderBottom':`1px solid #ededed`}}>
                         {this.state.searchActive ? <SearchCom /> : ''}
                     </div>
                 </div>
@@ -43,7 +49,7 @@ export default class Board extends Component {
                     {
                         this.state.todayRecommendList.map((item, i) => {
                             return (
-                                <div className="list-item while-b padding-2" key={i} data-id={item.id} >
+                                <div className="list-item while-b padding-2" key={i} data-id={item.id} onClick={()=>{this.activeInfo(item.id)}}>
                                     <div className="list-item-img">
                                         <img src={item.albums[0]} alt={item.tags}/>
                                     </div>
@@ -62,6 +68,9 @@ export default class Board extends Component {
     }
     back(){ 
         this.props.history.goBack()
+    }
+    activeInfo(id){
+        this.props.history.push(`/info/${id}`)
     }
     
 }
