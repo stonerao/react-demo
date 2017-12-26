@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {Link} from 'react-router-dom'
 import { dishName, banners, recommend, todayRecommend } from '../ajax/data'
 import Swiper from 'swiper'
 import SearchCom from '../component/nav'
@@ -52,7 +53,7 @@ export default class Board extends Component {
                 <div className="while-b mg-t-2 padding-2">
                     <p className="index-title-1">
                         <a>今日菜品</a>
-                        <span className="float-right index-more">更多</span>
+                        <Link to="/lists/10" className="float-right index-more">更多</Link> 
                     </p>
                     <div className="swiper-container recommendList">
                         <div className="swiper-wrapper">
@@ -103,25 +104,9 @@ export default class Board extends Component {
         );
     }
     dishClass(state) {
-        /* 改 */
+        /* 改 */  
         this.setState({ dishState: state });
-    }
-    searchValue(_event) {
-        // 改变当前input 值
-        this.setState({ searchVal: _event.target.value });
-    }
-    searchBtn(state) {
-        // 点击搜索按钮 
-        switch (state) {
-            case true:
-                /* 搜索 */
-                break;
-            default:
-                /* 取消搜索 */
-                this.setState({ searchVal: '' })
-                break;
-        }
-    }
+    } 
 }
 window.onload = function () {
     new Swiper('.items-names', {

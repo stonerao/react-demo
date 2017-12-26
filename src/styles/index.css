@@ -113,8 +113,7 @@
      overflow: hidden;
      font-size: 0.24rem;
      line-height: 0.32rem;
-     color: #666;
-     overflow: hidden;
+     color: #666; 
      text-overflow: ellipsis;
      white-space: nowrap;
  }
@@ -138,7 +137,8 @@
 
  .index-more {
      color: #999;
-     font-size: 0.24rem;
+     font-size: 0.24rem !important;
+     text-decoration: none;
  }
 
  .recommend-boxs {
@@ -156,8 +156,14 @@
      display: flex;
      height: 0.8rem; 
      border-bottom:0.01rem solid #eee;
+     
  }
-
+#list-nav{
+left:0;
+     right:0;
+     top:0;
+     position:relative;
+}
  .list-nav>div {
      width: 33.33%;
      line-height: 0.8rem;
@@ -188,4 +194,14 @@
 .list-item .list-item-img img{ 
     border-radius:3px;
     width:100%;
+}
+.list-item .list-item-title{
+    line-height:0.5rem;
+    font-size:0.3rem;
+    margin-top:0.05rem;
+}
+.list-item .list-item-content{
+     line-height:0.4rem;
+     font-size:0.28rem;
+     color:#666;
 }
