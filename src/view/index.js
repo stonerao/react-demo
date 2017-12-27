@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { dishName, banners, recommend, todayRecommend } from '../ajax/data'
 import Swiper from 'swiper'
 import SearchCom from '../component/nav'
+import Store from '../ajax/index'
 /* 菜名 */
 const dishNameItme = dishName.list;
-const recommendList = recommend.result.data;
 const todayRecommendList = todayRecommend.result.data;
 export default class Board extends Component {
     constructor(props) {
@@ -13,16 +13,22 @@ export default class Board extends Component {
         this.state = {
             name: "staone",
             dishState: 0,
-            searchVal: ""
+            searchVal: "",
+            recommendList: recommend.result.data
         }
-        setInterval(()=>{
-            console.log(555)
-        },1000)
+    }
+    componentDidMount() {
+        /* go */
+        Store.navList.call(this, dishNameItme[0].id);
+    }
+    hrefInof(id){
+        if(!id){return}
+        this.props.history.push(`/info/${id}`)
     }
     render() {
         return (
             <div className="shopping-list">
-                <SearchCom />
+                <SearchCom history={this.props.history} />
                 {/*  <div className="index-search">
                     <input type="text" className="index-search-conten" value={this.state.searchVal} onChange={this.searchValue.bind(this)} placeholder="请输入您要搜索的内容" />
                     <span className="index-search-btn" onClick={this.searchBtn.bind(this, this.state.searchVal ? false : true)}>{this.state.searchVal ? '取消' : '搜索'}</span>
@@ -33,7 +39,7 @@ export default class Board extends Component {
                         <div className="swiper-wrapper items-index-names">
                             {dishNameItme.map((item, i) => {
                                 return (
-                                    <div key={i} data-num={i} className={`${i === this.state.dishState ? 'active' : ''} swiper-slide`} onClick={() => this.dishClass(i)}>{item.name}</div>
+                                    <div key={i} data-num={i} className={`${i === this.state.dishState ? 'active' : ''} swiper-slide`} onClick={() => this.dishClass(i, item.id)}>{item.name}</div>
                                 )
                             })}
                         </div>
@@ -45,7 +51,7 @@ export default class Board extends Component {
                         {banners.map((item, i) => {
                             return (
                                 <div key={i} data-id={item.id} className="swiper-slide">
-                                    <img src={item.img} alt={i} />
+                                    <Link to={`/lists?search=${item.name}`}><img src={item.img} alt={i} /></Link> 
                                 </div>
                             )
                         })}
@@ -56,13 +62,13 @@ export default class Board extends Component {
                 <div className="while-b mg-t-2 padding-2">
                     <p className="index-title-1">
                         <a>今日菜品</a>
-                        <a href="/lists/10" className="float-right index-more">更多</a> 
+                        <Link to={`/lists?search=川`} className="float-right index-more">更多</Link>
                     </p>
                     <div className="swiper-container recommendList">
                         <div className="swiper-wrapper">
-                            {recommendList.map((item, i) => {
+                            {this.state.recommendList.map((item, i) => {
                                 return (
-                                    <div key={i} data-id={item.id} className="swiper-slide">
+                                    <div key={i} data-id={item.id} className="swiper-slide"  onClick={()=>this.hrefInof(item.id)}>
                                         <div className="recommend-items">
                                             <div className="recommend-item-name">
                                                 <img src={item.albums[0]} alt={item.tags} />
@@ -80,14 +86,13 @@ export default class Board extends Component {
 
                 <div className="while-b mg-t-2 padding-2">
                     <p className="index-title-1">
-                        <a>推荐菜品</a>
-                        <span className="float-right index-more">更多</span>
+                        <a>推荐菜品</a> 
                     </p>
                     <div className="recommend-boxs">
                         {
                             todayRecommendList.map((item, i) => {
                                 return (
-                                    <div key={i} data-id={item.id} className="mg-t-2">
+                                    <div key={i} data-id={item.id} className="mg-t-2" onClick={()=>this.hrefInof(item.id)}>
                                         <div className="recommend-item-name">
                                             <img src={item.albums[0]} alt={item.tags} />
                                         </div>
@@ -106,10 +111,11 @@ export default class Board extends Component {
             </div>
         );
     }
-    dishClass(state) {
-        /* 改 */  
+    dishClass(state, id) {
+        /* 改 */
         this.setState({ dishState: state });
-    } 
+        Store.navList.call(this, id);
+    }
 }
 window.onload = function () {
     new Swiper('.items-names', {

@@ -1,47 +1,64 @@
 import React, { Component } from 'react'
 import SearchCom from '../component/nav'
-import { todayRecommend } from '../ajax/data'
-import {onScrollBottom} from '../scripts/utils'
-const todayRecommendList = todayRecommend.result.data;
+import Store from '../ajax/index'
+import { getRequest } from '../scripts/utils'
 export default class listComponent extends Component {
     constructor(props) {
         super(props)
         this.state = {
             searchActive: false,
-            todayRecommendList:todayRecommendList,
-            navTop:false
-        } 
+            todayRecommendList: [],
+            navTop: false,
+            title: '列表',
+            pn: 1,
+            pageSzie: 29,
+            totalNum: this.pageSzie
+        }
     }
-    componentDidMount(){
-      this.onScrollBottom()
+    componentDidMount() {
+        /* 开始加载 */
+        this.listAjax()
+        window.addEventListener('scroll', this.onScrollBottom)
     }
-    onScrollBottom(){
-        onScrollBottom(()=>{ 
-             console.log(2.3)  
-            this.setState({todayRecommendList:[...this.state.todayRecommendList,this.state.todayRecommendList[0]]}) 
-        })  
-         window.onscroll = () => { 
-            var t = document.documentElement.scrollTop || document.body.scrollTop; //离上方的距离
-            const navHeight = document.getElementById('list-nav').scrollHeight 
-            if( t > navHeight &&!this.state.navTop){
-                this.setState({navTop:true})
-            }else if(this.state.navTop&&t <= navHeight+1){
-                this.setState({navTop:false})
+    componentWillUnmount() {
+        /* 卸载 scroll */
+        window.removeEventListener("scroll", this.onScrollBottom)
+        document.body.scrollTop = 0;
+    }
+    onScrollBottom = async (event) => {
+        let h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight; //可见宽度 
+        let t = document.documentElement.scrollTop || document.body.scrollTop; //离上方的距离
+        let navHeight = document.getElementById('list-nav').scrollHeight
+        if (t > navHeight && !this.state.navTop) {
+            this.setState({ navTop: true })
+        } else if (this.state.navTop && t <= navHeight + 1) {
+            this.setState({ navTop: false })
+        }
+        if (t >= document.documentElement.scrollHeight - h) { 
+            if (this.state.totalNum > this.state.pn) {
+                this.listAjax()
             }
+        }
+    }
+    listAjax() {
+        try {
+            Store.list.call(this, decodeURIComponent(getRequest().parms.search), this.state.pn, this.state.pageSzie)
+        } catch (error) {
+            console.log(error)
         }
     }
     render() {
         return (
             <div >
-                <div  id="list-nav" style={{'position':`${this.state.navTop?'fixed':'relative'}`}}> 
+                <div id="list-nav" style={{ 'position': `${this.state.navTop ? 'fixed' : 'relative'}` }}>
                     <nav className='list-nav while-b'>
-                        <div className='list-nav-back' onClick={()=>{this.back()}}>返回</div>
-                        <div className="list-nav-title">标题</div>
+                        <div className='list-nav-back' onClick={() => { this.props.history.push("/") }}>主页</div>
+                        <div className="list-nav-title">{this.state.title}</div>
                         <div className={`${this.state.searchActive ? 'active' : ''} list-nav-btn`} onClick={() => this.srarchClick()}></div>
                     </nav>
                     {/* search input */}
-                    <div style={{'borderBottom':`1px solid #ededed`}}>
-                        {this.state.searchActive ? <SearchCom /> : ''}
+                    <div style={{ 'borderBottom': `1px solid #ededed` }}>
+                        {this.state.searchActive ? <SearchCom history={this.props.history} /> : ''}
                     </div>
                 </div>
                 {/* list */}
@@ -49,9 +66,9 @@ export default class listComponent extends Component {
                     {
                         this.state.todayRecommendList.map((item, i) => {
                             return (
-                                <div className="list-item while-b padding-2" key={i} data-id={item.id} onClick={()=>{this.activeInfo(item.id)}}>
+                                <div className="list-item while-b padding-2" key={i} data-id={item.id} onClick={() => { this.activeInfo(item.id) }}>
                                     <div className="list-item-img">
-                                        <img src={item.albums[0]} alt={item.tags}/>
+                                        <img src={item.albums[0]} alt={item.tags} />
                                     </div>
                                     <div className="list-item-title"> {item.title} </div>
                                     <div className="list-item-content"> {item.imtro} </div>
@@ -60,17 +77,18 @@ export default class listComponent extends Component {
                         })
                     }
                 </div>
+                <div className="list-not">{this.state.todayRecommendList.length === 0 ? '没有搜索到该菜品' : ''}</div>
             </div>
         )
     }
     srarchClick() {
         this.setState({ searchActive: !this.state.searchActive })
     }
-    back(){ 
+    back() {
         this.props.history.goBack()
     }
-    activeInfo(id){
+    activeInfo(id) {
         this.props.history.push(`/info/${id}`)
     }
-    
+
 }
